@@ -5,18 +5,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 
 /**
  * Servlet implementation class MacCommodity
  */
-@WebServlet("/MacCommodityServlet")
+@WebServlet(name = "/MacCommodityServlet", urlPatterns = {"/purchase"})
 public class MacCommodityServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -33,7 +35,18 @@ public class MacCommodityServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		HttpSession session = request.getSession();
+		if (session == null || session.getAttribute("loggedin") == null) {
+			RequestDispatcher rd = request.getRequestDispatcher("/login.html");
+			rd.forward(request, response);
+			return;
+			//check if user has logged in
+		} 
+		else {
+			session.setAttribute("username", session.getAttribute("username"));
+			RequestDispatcher rd = request.getRequestDispatcher("/purchase.jsp");
+			rd.forward(request, response);
+		}
 	}
 
 	/**
@@ -48,23 +61,33 @@ public class MacCommodityServlet extends HttpServlet {
 		String num1 = request.getParameter("comname2");
 		String num2 = request.getParameter("comname3");
 		HashMap<String, Integer> commodityMap = new HashMap<String, Integer>();
+		//a hashmap of commodities' names and numbers
 		commodityMap.put("巨无霸", type_Int(num0));
 		commodityMap.put("麦辣鸡腿汉堡", type_Int(num1));
 		commodityMap.put("原味板烧鸡腿堡", type_Int(num2));
 		HashMap<String, Integer> priceMap = new HashMap<String, Integer>();
+		//a hashmap of commodities' names and prices
 		priceMap.put("巨无霸", 20);
 		priceMap.put("麦辣鸡腿汉堡", 17);
 		priceMap.put("原味板烧鸡腿堡", 18);
 		
+		
+		
 		response.setContentType("text/html;charset=UTF-8");
 		ArrayList<Commodity> ShoppingCart = new ArrayList<Commodity>();
-		for(int i = 0; i < commodity.length; i++) {
-			Commodity c = new Commodity(commodity[i], commodityMap.get(commodity[i]), priceMap.get(commodity[i]));
-			sum+=c.sum();
-			ShoppingCart.add(c);
+		//store the chosen commodity into the list
+		if (commodity != null) {
+			for(int i = 0; i < commodity.length; i++) {
+				Commodity c = new Commodity(commodity[i], commodityMap.get(commodity[i]), priceMap.get(commodity[i]));
+				sum+=c.sum();
+				ShoppingCart.add(c);
+			}
+			request.setAttribute("shoppingcart", ShoppingCart);
+			request.setAttribute("sum", sum);
+		} else {
+			RequestDispatcher rd = request.getRequestDispatcher("/purchase.jsp");
+			rd.forward(request, response);
 		}
-		request.setAttribute("shoppingcart", ShoppingCart);
-		request.setAttribute("sum", sum);
 		
 		RequestDispatcher rd = request.getRequestDispatcher("/ShoppingCart.jsp");
 		rd.forward(request, response);
@@ -84,7 +107,7 @@ public class MacCommodityServlet extends HttpServlet {
 //		out.println("</body></html>");
 	}
 	public int type_Int(String s) {
-		if(s != "")
+		if(s.matches("\\d+"))
 			return  Integer.parseInt(s);
 		else
 			return 0;
