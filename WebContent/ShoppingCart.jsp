@@ -9,11 +9,18 @@
 <title>Shopping Cart</title>
 </head>
 <body>
+<%	if (session == null || session.getAttribute("loggedin") == null) {
+		RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
+		rd.forward(request, response);
+		return;
+		//check if user has logged in
+	}
+%>
 <h3>Total</h3>
-${username}
+<div style="float:right">${username}</div>
 <pre>
 <%	
-	ArrayList<Commodity> cart = (ArrayList<Commodity>)request.getAttribute("shoppingcart");
+	ArrayList<Commodity> cart = (ArrayList<Commodity>)session.getAttribute("shoppingcart");
 	for(Commodity c:cart) {
 		out.print(c.print());
 	}

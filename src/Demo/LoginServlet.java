@@ -47,10 +47,11 @@ public class LoginServlet extends HttpServlet {
 			HttpSession session = request.getSession(true);
 			session.setAttribute("loggedin", Boolean.TRUE);
 			session.setAttribute("username", username);
-			response.sendRedirect("purchase");
+			response.sendRedirect("purchase.jsp");
 			return;
 		} else {
-			RequestDispatcher rd = request.getRequestDispatcher("/login.html");
+			request.setAttribute("info", "Wrong username or password.");
+			RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
 			rd.forward(request, response);
 		}
 	}

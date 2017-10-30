@@ -35,18 +35,7 @@ public class MacCommodityServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		HttpSession session = request.getSession();
-		if (session == null || session.getAttribute("loggedin") == null) {
-			RequestDispatcher rd = request.getRequestDispatcher("/login.html");
-			rd.forward(request, response);
-			return;
-			//check if user has logged in
-		} 
-		else {
-			session.setAttribute("username", session.getAttribute("username"));
-			RequestDispatcher rd = request.getRequestDispatcher("/purchase.jsp");
-			rd.forward(request, response);
-		}
+	
 	}
 
 	/**
@@ -54,6 +43,7 @@ public class MacCommodityServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		HttpSession session = request.getSession();
 		request.setCharacterEncoding("UTF-8");
 		int sum = 0;
 		String[] commodity = request.getParameterValues("commodity");
@@ -82,8 +72,8 @@ public class MacCommodityServlet extends HttpServlet {
 				sum+=c.sum();
 				ShoppingCart.add(c);
 			}
-			request.setAttribute("shoppingcart", ShoppingCart);
-			request.setAttribute("sum", sum);
+			session.setAttribute("shoppingcart", ShoppingCart);
+			session.setAttribute("sum", sum);
 		} else {
 			RequestDispatcher rd = request.getRequestDispatcher("/purchase.jsp");
 			rd.forward(request, response);
