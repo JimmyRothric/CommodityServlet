@@ -45,6 +45,13 @@ public class MacCommodityServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
 		request.setCharacterEncoding("UTF-8");
+		String addItem = request.getParameter("AddBtn");
+//		String showCart = request.getParameter("CartBtn");
+//		if (showCart != null) {
+//			response.sendRedirect("ShoppingCart.jsp");
+//			return;
+//		}
+		
 		int sum = 0;
 		String[] commodity = request.getParameterValues("commodity");
 		String num0 = request.getParameter("comname1");
@@ -61,10 +68,12 @@ public class MacCommodityServlet extends HttpServlet {
 		priceMap.put("麦辣鸡腿汉堡", 17);
 		priceMap.put("原味板烧鸡腿堡", 18);
 		
-		
-		
 		response.setContentType("text/html;charset=UTF-8");
-		ArrayList<Commodity> ShoppingCart = new ArrayList<Commodity>();
+//		ArrayList<Commodity> ShoppingCart = new ArrayList<Commodity>();
+		ArrayList<Commodity> ShoppingCart = (ArrayList<Commodity>)session.getAttribute("shoppingcart");
+		if (ShoppingCart == null) {
+			ShoppingCart = new ArrayList<Commodity>();
+		}
 		//store the chosen commodity into the list
 		if (commodity != null) {
 			for(int i = 0; i < commodity.length; i++) {
@@ -74,13 +83,19 @@ public class MacCommodityServlet extends HttpServlet {
 			}
 			session.setAttribute("shoppingcart", ShoppingCart);
 			session.setAttribute("sum", sum);
-		} else {
-			RequestDispatcher rd = request.getRequestDispatcher("/purchase.jsp");
-			rd.forward(request, response);
 		}
+//		else {
+//			RequestDispatcher rd = request.getRequestDispatcher("/purchase.jsp");
+//			rd.forward(request, response);
+//		}
+
+		if (addItem != null) {
+			session.setAttribute("AddBtn", new Boolean(true));
+			response.sendRedirect("purchase.jsp");
+		}
+//		RequestDispatcher rd = request.getRequestDispatcher("/ShoppingCart.jsp");
+//		rd.forward(request, response);
 		
-		RequestDispatcher rd = request.getRequestDispatcher("/ShoppingCart.jsp");
-		rd.forward(request, response);
 		
 //		int sum = 0;
 //		PrintWriter out = response.getWriter();

@@ -3,9 +3,10 @@ package Demo;
 import java.util.HashMap;
 
 public class Commodity {
-	public String name;
-	public int num;
-	public int price;
+	private String name;
+	private int num;
+	private int price;
+	
 	public Commodity(String name, int num, int price) {
 		this.name = name;
 		this.num = num;
@@ -19,5 +20,17 @@ public class Commodity {
 	}
 	public int sum() {
 		return num * price;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getNum() {
+		return num;
+	}
+	public void setNum(int num) {
+		this.num = num;
 	}
 }

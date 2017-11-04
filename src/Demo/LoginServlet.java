@@ -50,7 +50,7 @@ public class LoginServlet extends HttpServlet {
 			response.sendRedirect("purchase.jsp");
 			return;
 		} else {
-			request.setAttribute("info", "Wrong username or password.");
+			request.setAttribute("info", "Wrong username or password.<br/>username:admin<br/>password:admin");
 			RequestDispatcher rd = request.getRequestDispatcher("/login.jsp");
 			rd.forward(request, response);
 		}

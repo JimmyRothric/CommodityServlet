@@ -1,7 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import = "Demo.Commodity "%>
-<%@ page import = "Demo.MacCommodityServlet"%>
+<%@ page import="Demo.Commodity "%>
+<%@ page import="Demo.MacCommodityServlet"%>
 <%@ page import="java.util.*"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -21,12 +21,21 @@
 <pre>
 <%	
 	ArrayList<Commodity> cart = (ArrayList<Commodity>)session.getAttribute("shoppingcart");
-	for(Commodity c:cart) {
-		out.print(c.print());
-	}
+	if (cart != null) {
+		for(Commodity c:cart) {
+			out.print(c.print());
+		}
 %>
 <br/>
 <b>合计：.......${sum}元</b>
+<%
+	} else {
+%>
+<br/>
+<b>合计：.......0元</b>
+<% 	
+	}
+%>
 </pre>
 </body>
 </html>
